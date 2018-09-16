@@ -14,6 +14,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var cardButton: UIButton!
     @IBOutlet weak var flipCountLabel: UILabel!
+    var emojiChoices: [String] = ["💩","👽","👽","💩"]
+    
+    @IBOutlet var cardButtons: [UIButton]!
     
     var flipCardCount = 0 {
         // observer - obserwuje wartosc i wykonuje poniższy kod po każdej zmianie wartości
@@ -25,8 +28,14 @@ class ViewController: UIViewController {
     
     // MARK: Actions
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCard(with_emoji: "😡", on: sender)
         flipCardCount += 1
+        
+        if let cardNumber = cardButtons.index(of: sender) {
+            print("numer karty = \(cardNumber)")
+            flipCard(with_emoji: emojiChoices[cardNumber], on: sender)
+        } else {
+            print("nie ma takiej karty")
+        }
     }
     
     // MARK: Functions
@@ -34,11 +43,11 @@ class ViewController: UIViewController {
     func flipCard(with_emoji emoji: String, on button: UIButton) {
         print("flipCardWithEmoji: \(emoji)")
         if button.currentTitle == emoji {
-            cardButton.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
-            cardButton.setTitle("", for: UIControlState.normal)
+            button.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
+            button.setTitle("", for: UIControlState.normal)
         } else {
-            cardButton.setTitle(emoji, for: UIControlState.normal)
-            cardButton.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            button.setTitle(emoji, for: UIControlState.normal)
+            button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         }
     }
 
