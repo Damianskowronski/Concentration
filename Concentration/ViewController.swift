@@ -10,8 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    // MARK: Properties
+    //doczytać o LAZY ???
+    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2 )
     
+    // MARK: Properties
     @IBOutlet weak var cardButton: UIButton!
     @IBOutlet weak var flipCountLabel: UILabel!
     var emojiChoices: [String] = ["💩","👽","👽","💩"]
