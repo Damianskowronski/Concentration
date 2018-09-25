@@ -14,9 +14,8 @@ class ViewController: UIViewController {
     lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2 )
     
     // MARK: Properties
-    @IBOutlet weak var cardButton: UIButton!
+    //@IBOutlet weak var cardButton: UIButton!
     @IBOutlet weak var flipCountLabel: UILabel!
-    var emojiChoices: [String] = ["💩","👽","👽","💩"]
     
     @IBOutlet var cardButtons: [UIButton]!
     
@@ -33,26 +32,53 @@ class ViewController: UIViewController {
         flipCardCount += 1
         
         if let cardNumber = cardButtons.index(of: sender) {
-            print("numer karty = \(cardNumber)")
-            flipCard(with_emoji: emojiChoices[cardNumber], on: sender)
+            print("index karty: \(cardNumber)")
+            game.chooseCard(at: cardNumber)
+            updateViewFromModel()
         } else {
             print("nie ma takiej karty")
         }
     }
     
     // MARK: Functions
-    
-    func flipCard(with_emoji emoji: String, on button: UIButton) {
-        print("flipCardWithEmoji: \(emoji)")
-        if button.currentTitle == emoji {
-            button.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
-            button.setTitle("", for: UIControlState.normal)
-        } else {
-            button.setTitle(emoji, for: UIControlState.normal)
-            button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    /* funkcja aktualizująca widok o zmiany w modelu*/
+    func updateViewFromModel() {
+        for index in cardButtons.indices {
+            let button = cardButtons[index]
+            
+            let card = game.cards[index]
+            
+            if card.isFacedUp {
+                button.setTitle(emoji(for: card), for: UIControlState.normal)
+                button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            } else {
+                button.setTitle("", for: UIControlState.normal)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
+            }
         }
     }
-
+    
+    var emojiChoices = ["💩","😡","💀","🤡","👻","👽","🤖","👺","👌🏻"]
+    var emoji = [Int:String]()
+    
+    func emoji(for card: Card) -> String {
+        
+        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+            let randomIndex = Int(arc4random_uniform((UInt32(emojiChoices.count))))
+            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+        }
+        
+        /*
+         if emoji[card.identifier] != nil {
+         return emoji[card.identifier]
+         } else {
+         return "?"
+         }
+         */
+        // powyższy kod można zamienić tak:
+        
+        return emoji[card.identifier] ?? "?"
+    }
     
 }
 

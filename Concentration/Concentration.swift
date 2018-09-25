@@ -10,14 +10,34 @@ import Foundation
 
 class Concentration
 {
+    //MARK: Properties
     var cards = [Card]()
+    var idexOfOneAndOnlyFaceUpCard: Int?
     
+
     func chooseCard(at index: Int) {
-        
+        if !cards[index].isMatched {
+            if let matchIndex = idexOfOneAndOnlyFaceUpCard, matchIndex != index {
+                if cards[matchIndex].identifier == cards[index].identifier {
+                    cards[matchIndex].isMatched = true
+                    cards[index].isMatched = true
+                }
+                cards[index].isFacedUp = true
+                idexOfOneAndOnlyFaceUpCard = nil
+            } else {
+                for flipDownIndex in cards.indices {
+                    cards[flipDownIndex].isFacedUp = false
+                }
+                cards[index].isFacedUp = true
+                idexOfOneAndOnlyFaceUpCard = index
+            }
+        }
     }
+    // add button to reset the game
+    
     
     init(numberOfPairsOfCards: Int) {
-        for _ in 1..<numberOfPairsOfCards {
+        for _ in 1...numberOfPairsOfCards {
             let card = Card()
             /*
             let matchingCard = card
@@ -31,6 +51,7 @@ class Concentration
             //tego
             cards += [card, card]
         }
+        print("Ilość kart: \(cards.count)")
     }
     
     // TODO: shuffle the cards
